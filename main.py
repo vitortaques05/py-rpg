@@ -4,77 +4,8 @@ import random
 from personagem import Personagem
 from inimigo import Inimigo
 from item import Item
-
-
-# Inicializa o pygame
-pygame.init()
-
-# Definições de tela
-tela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-tela_largura, tela_altura = tela.get_size()
-
-mundo_largura = 2000
-mundo_altura = 2000
-
-
-# Funções auxiliares
-def texto_na_tela(tela, texto, fonte, cor, x, y):
-    imagem_texto = fonte.render(texto, True, cor)
-    tela.blit(imagem_texto, (x, y))
-
-# Função de confirmação de saída
-def confirmar_saida(tela):
-    fonte = pygame.font.Font(None, 72)
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_y:
-                    pygame.quit()
-                    sys.exit()
-                elif evento.key == pygame.K_n:
-                    return
-        
-        tela.fill((0, 0, 0))
-        texto_na_tela(tela, "Você quer sair? (Y/N)", fonte, (255, 255, 255), tela_largura / 2 - 200, tela_altura / 2 - 50)
-        pygame.display.flip()
-
-# Função do menu principal
-def menu_principal(tela):
-    fonte = pygame.font.Font(None, 72)
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_RETURN:
-                    return
-                elif evento.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-
-        tela.fill((0, 0, 0))
-        texto_na_tela(tela, "Pressione ENTER para começar", fonte, (255, 255, 255), tela_largura / 2 - 250, tela_altura / 2 - 50)
-        pygame.display.flip()
-
-# Função de tela de Game Over
-def tela_game_over(tela):
-    fonte = pygame.font.Font(None, 72)
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_RETURN:
-                    return
-
-        tela.fill((0, 0, 0))
-        texto_na_tela(tela, "Game Over! Pressione ENTER para reiniciar", fonte, (255, 255, 255), tela_largura / 2 - 350, tela_altura / 2 - 50)
-        pygame.display.flip()
+from config import tela, tela_largura, tela_altura, som_colisao, som_item
+from util import texto_na_tela, confirmar_saida, menu_principal, tela_game_over
 
 # Inicialização do jogo
 personagem = Personagem(tela_largura, tela_altura)
@@ -85,17 +16,10 @@ clock = pygame.time.Clock()
 nivel_dificuldade = 1
 pontuacao = 0
 
-# Carregar música de fundo e efeitos sonoros
-pygame.mixer.music.load('musica_de_fundo.mp3')
-som_colisao = pygame.mixer.Sound('colisao.wav')
-som_item = pygame.mixer.Sound('item.wav')
-pygame.mixer.music.pause()  # Pausa a música
-pygame.mixer.music.unpause()  # Retoma a música pausada
-
 # Função principal do jogo
 def main():
     global pontuacao, nivel_dificuldade, inimigos, itens
-    menu_principal(tela)
+    menu_principal(tela, tela_largura, tela_altura)
 
     while True:
         for evento in pygame.event.get():
@@ -103,7 +27,7 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
-                confirmar_saida(tela)
+                confirmar_saida(tela, tela_largura, tela_altura)
 
         teclas = pygame.key.get_pressed()
         personagem.mover(teclas, tela_largura, tela_altura)
@@ -146,13 +70,11 @@ def main():
         texto_na_tela(tela, f"Pontuação: {pontuacao}", fonte, (255, 255, 255), 10, 130)
 
         if personagem.vida <= 0:
-            tela_game_over(tela)
+            tela_game_over(tela, tela_largura, tela_altura)
             return
 
         pygame.display.flip()
         clock.tick(60)
-
-        
 
 if __name__ == "__main__":
     main()
