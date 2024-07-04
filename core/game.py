@@ -7,6 +7,7 @@ from core.world_generator import generate_world
 from entities.personagem import Personagem
 from entities.inimigo import Inimigo
 from entities.item import Item
+from entities.barravida import BarraVida
 
 class Game:
     def __init__(self):
@@ -17,36 +18,46 @@ class Game:
         self.clock = pygame.time.Clock()
         self.nivel_dificuldade = 1
         self.pontuacao = 0
+        self.barra_vida = BarraVida(10, 10, 200, 20, (0, 255, 0), (255, 0, 0), self.personagem.vida)
 
     def run(self):
         world_surface = generate_world(tela, tela_largura // 50, tela_altura // 50)
         menu_principal(tela, tela_largura, tela_altura)
 
         while True:
+            self.barra_vida.atualizar_vida(self.personagem.vida)
+
+            tela.blit(world_surface, (0, 0))
+
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
-                    confirmar_saida(tela, tela_largura, tela_altura)
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_ESCAPE:
+                        confirmar_saida(tela, tela_largura, tela_altura)
+                    if evento.key == pygame.K_SPACE:
+                        self.personagem.atacar()
 
             teclas = pygame.key.get_pressed()
             self.personagem.mover(teclas, tela_largura, tela_altura)
 
             for inimigo in self.inimigos[:]:
                 inimigo.mover(self.personagem.x, self.personagem.y)
-                if self.personagem.rect.colliderect(inimigo.rect):
-                    self.personagem.vida -= inimigo.forca
-                    inimigo.vida -= self.personagem.forca
-                    som_colisao.play()
-                    if inimigo.vida <= 0:
-                        self.inimigos.remove(inimigo)
-                        self.personagem.experiencia += 10
-                        self.pontuacao += 10
-                        if self.personagem.experiencia >= 100 * self.nivel_dificuldade:
-                            self.nivel_dificuldade += 1
-                            self.inimigos.append(Inimigo(tela_largura, tela_altura))
-                            self.personagem.experiencia -= 100 * self.nivel_dificuldade
+                inimigo.atacar(self.personagem)
+
+                if self.personagem.atacando:
+                    espada_rect = self.personagem.get_espada_rect()
+                    if espada_rect.colliderect(inimigo.rect):
+                        inimigo.vida -= self.personagem.forca
+                        if inimigo.vida <= 0:
+                            self.inimigos.remove(inimigo)
+                            self.personagem.experiencia += 10
+                            self.pontuacao += 10
+                            if self.personagem.experiencia >= 100 * self.nivel_dificuldade:
+                                self.nivel_dificuldade += 1
+                                self.inimigos.append(Inimigo(tela_largura, tela_altura))
+                                self.personagem.experiencia -= 100 * self.nivel_dificuldade
 
             for item in self.itens[:]:
                 if self.personagem.rect.colliderect(item.rect):
@@ -57,7 +68,8 @@ class Game:
                     self.itens.remove(item)
                     som_item.play()
 
-            tela.blit(world_surface, (0, 0))
+            self.barra_vida.desenhar(tela)
+
             self.personagem.desenhar(tela)
             for inimigo in self.inimigos:
                 inimigo.desenhar(tela)

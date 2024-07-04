@@ -4,8 +4,8 @@ from utils.ui_helpers import carregar_imagem
 
 class Item:
     def __init__(self, tela_largura, tela_altura, tipo):
-        self.largura = 20
-        self.altura = 20
+        self.largura = 40
+        self.altura = 40
         self.x = random.randint(0, tela_largura - self.largura)
         self.y = random.randint(0, tela_altura - self.altura)
         self.tipo = tipo

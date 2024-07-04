@@ -13,11 +13,14 @@ def generate_world(tela, largura, altura):
 
     mapa_alturas = generate_height_map(largura, altura)
 
+
     for y in range(altura):
         for x in range(largura):
             altura = mapa_alturas[y][x]
-            if altura < 0.4:
+            if altura < 0.3:
                 texture = water_texture
+            elif altura < 0.5:
+                texture = random.choice([grass_texture, water_texture])
             else:
                 texture = grass_texture
             draw_texture(world_surface, texture, x, y, tamanho_celula_x, tamanho_celula_y)
@@ -26,7 +29,7 @@ def generate_world(tela, largura, altura):
 
 def generate_height_map(largura, altura):
     mapa_alturas = []
-    frequencia = 16.0 / largura
+    frequencia = 1 / largura
     for y in range(altura):
         linha = []
         for x in range(largura):
