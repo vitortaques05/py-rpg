@@ -49,7 +49,11 @@ class Game:
                 if self.personagem.atacando:
                     espada_rect = self.personagem.get_espada_rect()
                     if espada_rect.colliderect(inimigo.rect):
-                        inimigo.vida -= self.personagem.forca
+                        # Aplica um dano fixo ao inimigo
+                        dano = max(1, self.personagem.forca // 2)  # Exemplo de cálculo de dano
+                        inimigo.vida -= dano
+
+                        # Verifica se o inimigo foi derrotado
                         if inimigo.vida <= 0:
                             self.inimigos.remove(inimigo)
                             self.personagem.experiencia += 10

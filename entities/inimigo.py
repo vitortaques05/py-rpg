@@ -43,7 +43,9 @@ class Inimigo:
         # Verifica se o inimigo pode atacar o jogador (dentro da distância e cooldown)
         agora = pygame.time.get_ticks()
         if self.rect.colliderect(personagem.rect) and (agora - self.ultimo_ataque > self.cooldown_ataque):
-            personagem.vida -= self.forca
+            # Calcula o dano com um valor fixo ou outra lógica adequada
+            dano = max(1, self.forca - 1)  # Exemplo de cálculo de dano com defesa fixa de 1
+            personagem.vida -= dano
             self.ultimo_ataque = agora
             self.atacando = True
             # Troca para a imagem de ataque durante um curto período
