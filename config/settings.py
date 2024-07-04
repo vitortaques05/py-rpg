@@ -32,7 +32,16 @@ clock = pygame.time.Clock()
 nivel_dificuldade = 1
 pontuacao = 0
 
+# Inicializa o mixer com um buffer maior
+pygame.mixer.pre_init(44100, -16, 2, 512)
+pygame.mixer.init()
+
 # Carregar música de fundo e efeitos sonoros
-pygame.mixer.music.load('assets\sounds\musica_de_fundo.mp3')
-pygame.mixer.music.pause()  # Pausa a música
-pygame.mixer.music.unpause()  # Retoma a música pausada
+try:
+    pygame.mixer.music.load('assets/sounds/musica_de_fundo.ogg')
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play(-1)
+except pygame.error as e:
+    print(f"Erro ao carregar a música de fundo: {e}")
+
+
