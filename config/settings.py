@@ -31,3 +31,8 @@ clock = pygame.time.Clock()
 # Variáveis globais
 nivel_dificuldade = 1
 pontuacao = 0
+
+# Carregar música de fundo e efeitos sonoros
+pygame.mixer.music.load('assets\sounds\musica_de_fundo.mp3')
+pygame.mixer.music.pause()  # Pausa a música
+pygame.mixer.music.unpause()  # Retoma a música pausada
