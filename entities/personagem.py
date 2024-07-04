@@ -64,11 +64,12 @@ class Personagem:
                 self.atacando = False
 
     def usar_item(self, item):
-        if item == 'vida':
-            self.vida += 20
-        elif item == 'forca':
-            self.forca += 5
-        self.inventario.remove(item)
+        if item in self.inventario:
+            if item == 'vida':
+                self.vida += 20
+            elif item == 'forca':
+                self.forca += 5
+            self.inventario.remove(item)
 
     def get_espada_rect(self):
         # Implemente conforme a lógica do seu jogo

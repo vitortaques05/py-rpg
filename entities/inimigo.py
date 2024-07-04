@@ -9,7 +9,7 @@ class Inimigo:
         self.x = random.randint(0, tela_largura - self.largura)
         self.y = random.randint(0, tela_altura - self.altura)
         self.vida = 200
-        self.forca = 5
+        self.forca = 20
         self.velocidade = random.randint(1, 2)  # Velocidade variável entre 1 e 2
         self.distancia_detecao = 200  # Distância a partir da qual o inimigo começa a seguir o jogador
         self.imagem_padrao = carregar_imagem('assets/images/inimigo.png', self.largura, self.altura)
