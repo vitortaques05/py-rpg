@@ -6,19 +6,33 @@ from inimigo import Inimigo
 from item import Item
 from config import tela, tela_largura, tela_altura, som_colisao, som_item
 from util import texto_na_tela, confirmar_saida, menu_principal, tela_game_over
+from world_generator import generate_world
 
-# Inicialização do jogo
-personagem = Personagem(tela_largura, tela_altura)
-inimigos = [Inimigo(tela_largura, tela_altura) for _ in range(5)]
-itens = [Item(tela_largura, tela_altura, random.choice(['vida', 'forca'])) for _ in range(5)]
-fonte = pygame.font.Font(None, 36)
-clock = pygame.time.Clock()
+# Variáveis globais
+personagem = None
+inimigos = []
+itens = []
+fonte = None
+clock = None
 nivel_dificuldade = 1
 pontuacao = 0
 
-# Função principal do jogo
+def setup_jogo():
+    global personagem, inimigos, itens, fonte, clock, nivel_dificuldade, pontuacao
+    
+    # Inicialização do jogo
+    personagem = Personagem(tela_largura, tela_altura)
+    inimigos = [Inimigo(tela_largura, tela_altura) for _ in range(5)]
+    itens = [Item(tela_largura, tela_altura, random.choice(['vida', 'forca'])) for _ in range(5)]
+    fonte = pygame.font.Font(None, 36)
+    clock = pygame.time.Clock()
+    nivel_dificuldade = 1
+    pontuacao = 0
+
 def main():
-    global pontuacao, nivel_dificuldade, inimigos, itens
+    global nivel_dificuldade, pontuacao
+    setup_jogo()
+    world_surface = generate_world(tela, tela_largura // 50, tela_altura // 50)
     menu_principal(tela, tela_largura, tela_altura)
 
     while True:
@@ -56,7 +70,7 @@ def main():
                 itens.remove(item)
                 som_item.play()
 
-        tela.fill((0, 0, 0))
+        tela.blit(world_surface, (0, 0))
         personagem.desenhar(tela)
         for inimigo in inimigos:
             inimigo.desenhar(tela)
