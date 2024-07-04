@@ -3,8 +3,8 @@ import random
 import noise  # Certifique-se de que o pacote `noise` esteja instalado corretamente
 
 # Carregar texturas
-grass_texture = pygame.image.load('assets/grass.jpg')
-water_texture = pygame.image.load('assets/water.jpg')
+grass_texture = pygame.image.load('assets/images/grass.jpg')
+water_texture = pygame.image.load('assets/images/water.jpg')
 
 def generate_world(tela, largura, altura):
     tamanho_celula_x = tela.get_width() // largura

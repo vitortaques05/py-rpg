@@ -1,18 +1,18 @@
 import pygame
 import random
-from util import carregar_imagem
+from utils.ui_helpers import carregar_imagem
 
 class Inimigo:
     def __init__(self, tela_largura, tela_altura):
-        self.largura = 30
-        self.altura = 30
+        self.largura = 80
+        self.altura = 50
         self.x = random.randint(0, tela_largura - self.largura)
         self.y = random.randint(0, tela_altura - self.altura)
         self.vida = 20
         self.forca = 5
         self.velocidade = random.randint(1, 3)  # Velocidade variável entre 1 e 3
         self.distancia_detecao = 200  # Distância a partir da qual o inimigo começa a seguir o jogador
-        self.imagem = carregar_imagem('inimigo.png', self.largura, self.altura)
+        self.imagem = carregar_imagem('assets\images\inimigo.png', self.largura, self.altura)
         self.rect = pygame.Rect(self.x, self.y, self.largura, self.altura)
 
     def mover(self, personagem_x, personagem_y):

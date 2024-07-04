@@ -1,5 +1,5 @@
 import pygame
-from util import carregar_imagem
+from utils.ui_helpers import carregar_imagem
 
 class Personagem:
     def __init__(self, tela_largura, tela_altura):
@@ -13,7 +13,7 @@ class Personagem:
         self.level = 1
         self.experiencia = 0
         self.inventario = []
-        self.imagem = carregar_imagem('personagem.png', self.largura, self.altura)
+        self.imagem = carregar_imagem('assets\images\personagem.png', self.largura, self.altura)
         self.imagem_original = self.imagem  # Guardar a imagem original
         self.direcao = 'right'  # Direção inicial
         self.rect = pygame.Rect(self.x, self.y, self.largura, self.altura)
