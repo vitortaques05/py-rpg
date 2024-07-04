@@ -1,44 +1,58 @@
 import pygame
 import random
-import noise  # Certifique-se de que o pacote `noise` esteja instalado corretamente
+import noise  # Certifique-se de que o pacote noise esteja instalado corretamente
 
 # Carregar texturas
 grass_texture = pygame.image.load('assets/images/grass.jpg')
 water_texture = pygame.image.load('assets/images/water.jpg')
+tree_texture = pygame.image.load('assets/images/tree.png')  # Carregar a textura da árvore
 
-def generate_world(tela, largura, altura):
-    tamanho_celula_x = tela.get_width() // largura
-    tamanho_celula_y = tela.get_height() // altura
-    world_surface = pygame.Surface((tela.get_width(), tela.get_height()))
+def generate_world(screen, width, height):
+    cell_width = screen.get_width() // width
+    cell_height = screen.get_height() // height
+    world_surface = pygame.Surface((screen.get_width(), screen.get_height()))
 
-    mapa_alturas = generate_height_map(largura, altura)
+    height_map = generate_height_map(width, height)
 
-
-    for y in range(altura):
-        for x in range(largura):
-            altura = mapa_alturas[y][x]
-            if altura < 0.3:
+    for y in range(height):
+        for x in range(width):
+            altitude = height_map[y][x]
+            if altitude < 0.3:
                 texture = water_texture
-            elif altura < 0.5:
-                texture = random.choice([grass_texture, water_texture])
-            else:
+            elif altitude < 0.6:
                 texture = grass_texture
-            draw_texture(world_surface, texture, x, y, tamanho_celula_x, tamanho_celula_y)
+            else:
+                texture = tree_texture  # Adicionar árvores em altitudes mais altas
+
+            draw_texture(world_surface, texture, x, y, cell_width, cell_height)
     
     return world_surface
 
-def generate_height_map(largura, altura):
-    mapa_alturas = []
-    frequencia = 1 / largura
-    for y in range(altura):
-        linha = []
-        for x in range(largura):
-            altura = noise.pnoise2(x * frequencia, y * frequencia)
-            altura = (altura + 1) / 2.0
-            linha.append(altura)
-        mapa_alturas.append(linha)
-    return mapa_alturas
+def generate_height_map(width, height):
+    height_map = []
+    scale = 10.0  # Ajuste de escala para controlar a variação de altitude
+    octaves = 6
+    persistence = 0.5
+    lacunarity = 2.0
 
-def draw_texture(tela, texture, x, y, tamanho_celula_x, tamanho_celula_y):
-    textura_redimensionada = pygame.transform.scale(texture, (tamanho_celula_x, tamanho_celula_y))
-    tela.blit(textura_redimensionada, (x * tamanho_celula_x, y * tamanho_celula_y))
+    for y in range(height):
+        row = []
+        for x in range(width):
+            amplitude = 1.0
+            frequency = 1.0
+            noise_value = 0.0
+
+            for _ in range(octaves):
+                noise_value += noise.pnoise2(x / scale * frequency, y / scale * frequency) * amplitude
+                amplitude *= persistence
+                frequency *= lacunarity
+
+            noise_value = (noise_value + 1) / 2.0  # Normalização para o intervalo [0, 1]
+            row.append(noise_value)
+        height_map.append(row)
+
+    return height_map
+
+def draw_texture(screen, texture, x, y, cell_width, cell_height):
+    scaled_texture = pygame.transform.scale(texture, (cell_width, cell_height))
+    screen.blit(scaled_texture, (x * cell_width, y * cell_height))
