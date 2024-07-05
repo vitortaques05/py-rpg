@@ -19,6 +19,13 @@ class Personagem:
         self.rect = pygame.Rect(self.x, self.y, self.largura, self.altura)
         self.atacando = False
         self.tempo_ataque = 0
+        
+        # Dimensões da espada
+        self.largura_da_espada = 60
+        self.altura_da_espada = 20
+        
+        # Imagem da espada para o ataque
+        self.imagem_espada = carregar_imagem('assets/images/espada.png', self.largura_da_espada, self.altura_da_espada)  # Substitua com as dimensões corretas da espada
 
     def mover(self, teclas, tela_largura, tela_altura):
         if teclas[pygame.K_UP] and self.y > 0:
@@ -46,18 +53,16 @@ class Personagem:
         tela.blit(self.imagem, self.rect.topleft)
         if self.atacando:
             # Desenhe a espada com base na direção
-            espada_largura = 20
-            espada_altura = 10
             if self.direcao == 'right':
-                espada_rect = pygame.Rect(self.rect.right, self.rect.centery - espada_altura // 2, espada_largura, espada_altura)
+                pos_espada = (self.rect.right, self.rect.centery - self.altura_da_espada // 2)
             elif self.direcao == 'left':
-                espada_rect = pygame.Rect(self.rect.left - espada_largura, self.rect.centery - espada_altura // 2, espada_largura, espada_altura)
+                pos_espada = (self.rect.left - self.largura_da_espada, self.rect.centery - self.altura_da_espada // 2)
             elif self.direcao == 'up':
-                espada_rect = pygame.Rect(self.rect.centerx - espada_largura // 2, self.rect.top - espada_altura, espada_largura, espada_altura)
+                pos_espada = (self.rect.centerx - self.largura_da_espada // 2, self.rect.top - self.altura_da_espada)
             elif self.direcao == 'down':
-                espada_rect = pygame.Rect(self.rect.centerx - espada_largura // 2, self.rect.bottom, espada_largura, espada_altura)
+                pos_espada = (self.rect.centerx - self.largura_da_espada // 2, self.rect.bottom)
             
-            pygame.draw.rect(tela, (255, 0, 0), espada_rect)
+            tela.blit(self.imagem_espada, pos_espada)
             
             # Reseta o estado de ataque após um curto período
             if pygame.time.get_ticks() - self.tempo_ataque > 200:  # 200 milissegundos de duração do ataque
@@ -74,13 +79,11 @@ class Personagem:
     def get_espada_rect(self):
         # Implemente conforme a lógica do seu jogo
         # Por exemplo, crie um retângulo para representar a espada
-        largura_da_espada = 30
-        altura_da_espada = 20
         if self.direcao == 'right':
-            return pygame.Rect(self.rect.right, self.rect.centery - altura_da_espada // 2, largura_da_espada, altura_da_espada)
+            return pygame.Rect(self.rect.right, self.rect.centery - self.altura_da_espada // 2, self.largura_da_espada, self.altura_da_espada)
         elif self.direcao == 'left':
-            return pygame.Rect(self.rect.left - largura_da_espada, self.rect.centery - altura_da_espada // 2, largura_da_espada, altura_da_espada)
+            return pygame.Rect(self.rect.left - self.largura_da_espada, self.rect.centery - self.altura_da_espada // 2, self.largura_da_espada, self.altura_da_espada)
         elif self.direcao == 'up':
-            return pygame.Rect(self.rect.centerx - largura_da_espada // 2, self.rect.top - altura_da_espada, largura_da_espada, altura_da_espada)
+            return pygame.Rect(self.rect.centerx - self.largura_da_espada // 2, self.rect.top - self.altura_da_espada, self.largura_da_espada, self.altura_da_espada)
         elif self.direcao == 'down':
-            return pygame.Rect(self.rect.centerx - largura_da_espada // 2, self.rect.bottom, largura_da_espada, altura_da_espada)
+            return pygame.Rect(self.rect.centerx - self.largura_da_espada // 2, self.rect.bottom, self.largura_da_espada, self.altura_da_espada)

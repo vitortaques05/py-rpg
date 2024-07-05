@@ -1,11 +1,11 @@
 import pygame
 import random
-import noise  # Certifique-se de que o pacote noise esteja instalado corretamente
+import noise
 
 # Carregar texturas
 grass_texture = pygame.image.load('assets/images/grass.jpg')
 water_texture = pygame.image.load('assets/images/water.jpg')
-tree_texture = pygame.image.load('assets/images/tree.png')  # Carregar a textura da árvore
+tree_texture = pygame.image.load('assets/images/tree.png')
 
 def generate_world(screen, width, height):
     cell_width = screen.get_width() // width
@@ -22,7 +22,7 @@ def generate_world(screen, width, height):
             elif altitude < 0.6:
                 texture = grass_texture
             else:
-                texture = tree_texture  # Adicionar árvores em altitudes mais altas
+                texture = tree_texture
 
             draw_texture(world_surface, texture, x, y, cell_width, cell_height)
     
@@ -30,10 +30,13 @@ def generate_world(screen, width, height):
 
 def generate_height_map(width, height):
     height_map = []
-    scale = 10.0  # Ajuste de escala para controlar a variação de altitude
+    scale = 10.0
     octaves = 6
     persistence = 0.5
     lacunarity = 2.0
+
+    # Usando random.seed() para garantir variação
+    random.seed()  # Semente aleatória baseada no tempo atual
 
     for y in range(height):
         row = []
@@ -47,7 +50,7 @@ def generate_height_map(width, height):
                 amplitude *= persistence
                 frequency *= lacunarity
 
-            noise_value = (noise_value + 1) / 2.0  # Normalização para o intervalo [0, 1]
+            noise_value = (noise_value + 1) / 2.0
             row.append(noise_value)
         height_map.append(row)
 

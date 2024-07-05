@@ -1,5 +1,3 @@
-
-# game.py
 import pygame
 import sys
 import random
@@ -36,7 +34,6 @@ class Game:
         self.clock = pygame.time.Clock()
 
     def run(self):
-        world_surface = generate_world(tela, tela_largura // 50, tela_altura // 50)
         menu_principal(tela, tela_largura, tela_altura)
 
         while True:
@@ -138,11 +135,3 @@ class Game:
         texto_na_tela(tela, f"Level: {self.personagem.level}", self.fonte, (255, 255, 255), 10, 70)
         texto_na_tela(tela, f"Experiência: {self.personagem.experiencia}", self.fonte, (255, 255, 255), 10, 100)
         texto_na_tela(tela, f"Pontuação: {self.pontuacao}", self.fonte, (255, 255, 255), 10, 130)
-
-    def run_game(self):
-        self.init_game()
-        self.run()
-
-if __name__ == "__main__":
-    jogo = Game()
-    jogo.run_game()
